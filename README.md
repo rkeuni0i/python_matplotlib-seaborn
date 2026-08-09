@@ -25,6 +25,8 @@ Matplotlib과 Seaborn을 이용한 데이터 시각화를 학습하며 다양한
 
 `data/`의 CSV 파일(`supply.csv`, `KOBIS_역대_박스오피스.csv`, `it_product.csv`)로 이번 정리 작업 중 재실행하여 검증했습니다. `01`, `04`는 Seaborn 내장 예제 데이터셋(`tips`, `titanic`, `iris`)을 인터넷에서 내려받아 사용합니다.
 
+> 처음 재실행했을 때는 정리 작업 환경에 원본에서 쓰인 한글 폰트(Malgun Gothic)가 없어 그래프의 한글이 네모(□)로 깨져 나왔습니다. 한글을 지원하는 폰트를 등록해 다시 렌더링한 뒤 `images/`의 이미지를 전부 교체했습니다(아래 Troubleshooting 3번 참고).
+
 ### 대표 결과
 
 ![막대 그래프](images/01_bar_pie_charts_and_seaborn_intro_01.png)
@@ -63,16 +65,18 @@ Jupyter의 코드 셀은 파이썬 코드로 해석되기 때문에, 설명 글�
 
 이런 메모는 코드 셀 대신 마크다운 셀에 작성하면 `SyntaxError` 없이 학습 내용을 정리할 수 있습니다. 이 저장소에서는 원본 그대로 남겨, Notebook에서 코드 셀과 마크다운 셀의 역할이 다르다는 점을 보여주는 사례로 남겼습니다.
 
-### 3. 한글 폰트가 깨지는 문제
+### 3. 한글 폰트가 깨지는 문제 (실제 발생한 오류 → 수정함)
 
 **문제**
 
-Matplotlib에서 한글이 포함된 제목/축 라벨을 출력하면 그래프에 네모(□)로 표시되거나 `UserWarning: Glyph ... missing from font(s)`가 나타날 수 있습니다.
+이 폴더의 노트북들은 코드에서 `plt.rcParams['font.family'] = 'Malgun Gothic'`을 지정하고 있습니다. 원본 Windows 환경에서는 정상적으로 렌더링되었지만, 이번 저장소 정리 작업 중 이 노트북들을 재실행한 리눅스 환경에는 `Malgun Gothic` 폰트가 설치되어 있지 않아, 그래프의 한글 제목/축 라벨이 전부 네모(□)로 깨져서 저장되었습니다.
 
 **원인**
 
-기본 폰트에는 한글 글리프가 없기 때문입니다.
+Matplotlib은 `font.family`로 지정된 이름의 폰트를 시스템에서 찾지 못하면 한글 글리프가 없는 기본 폰트로 조용히 대체합니다(경고만 뜨고 오류는 나지 않습니다). `Malgun Gothic`은 Windows 전용 폰트라 리눅스 실행 환경에는 존재하지 않았습니다.
 
 **해결**
 
-`plt.rcParams['font.family'] = 'Malgun Gothic'`처럼 한글을 지원하는 폰트를 지정하면 해결됩니다(이 저장소의 노트북들도 대부분 이 방법을 사용하고 있습니다). Windows에서는 `Malgun Gothic`, macOS에서는 `AppleGothic`, Linux에서는 `NanumGothic` 등 운영체제에 맞는 폰트를 설치하고 지정해야 합니다.
+리눅스 실행 환경에 한글을 지원하는 대체 글꼴(Noto Sans CJK KR)을 설치하고, 노트북 코드에는 손대지 않은 채 그 글꼴을 `Malgun Gothic`이라는 이름으로 등록해 재실행했습니다. 그 결과 노트북 코드는 원본 그대로 `'Malgun Gothic'`을 지정하고 있지만 실제로는 한글이 깨지지 않고 정상 렌더링됩니다. `images/`에 저장된 모든 이미지와 노트북에 내장된 실행 결과를 이 방식으로 다시 생성해 교체했습니다.
+
+일반적으로는 Windows에서 `Malgun Gothic`, macOS에서 `AppleGothic`, Linux에서 `NanumGothic` 등 운영체제에 맞는 한글 폰트를 설치하고 지정하면 됩니다.
